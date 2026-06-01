@@ -30,7 +30,8 @@ function getVariableValue(variableName, defaultValue) {
 }
 
 async function main() {
-    const UUID = getVariableValue('UUID', 'aaaaaaa7-bbbb-7ccc-accc-eeeeeeeeeee7');
+    // Your custom 32-digit binary UUID representing "raen"
+    const UUID = getVariableValue('UUID', '01110010011000010110010101101110');
     console.log('你的UUID:', UUID);
 
     const PORT = getVariableValue('PORT', '8080');
@@ -39,7 +40,6 @@ async function main() {
     const PATH_NAME = 'raen_xlx'; 
     const URL_PATH = encodeURIComponent(`/${PATH_NAME}`); 
 
-    // Custom spoofing settings
     const CUSTOM_HOST = 'firebase-settings.crashlytics.com';
     const CUSTOM_SNI = 'cares.paymaya.com';
 
@@ -56,7 +56,7 @@ async function main() {
         if (req.url === `/${UUID}`) {
             let vlessURL;
             if (NAME.includes('server') || NAME.includes('hostypanel')) {
-                vlessURL = `vless://{UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
