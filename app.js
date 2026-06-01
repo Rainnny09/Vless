@@ -3,7 +3,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { exec, execSync } = require('child_process');
+const { execSync } = require('child_process');
+
 function ensureModule(name) {
     try {
         require.resolve(name);
@@ -14,75 +15,72 @@ function ensureModule(name) {
 }
 ensureModule('ws');
 const { WebSocket, createWebSocketStream } = require('ws');
+
 const NAME = process.env.NAME || os.hostname();
+
 console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 console.log("甬哥Github项目  ：github.com/Hubdarkweb");
 console.log("甬哥Blogger博客 ：darkwebforums.topnet7hackers.space");
 console.log("甬哥YouTube频道 ：www.youtube.com/@topnet7hackersspace");
-console.log("Nodejs真一键无交互Vless代理脚本");
-console.log("当前版本：25.6.9");
+console.log("Nodejs自动化无交互Vless代理脚本");
 console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-async function getVariableValue(variableName, defaultValue) {
-    const envValue = process.env[variableName];
-    if (envValue) {
-        return envValue; 
-    }
-    if (defaultValue) {
-        return defaultValue; 
-    }
-  let input = '';
-  while (!input) {
-    input = await ask(`请输入${variableName}: `);
-    if (!input) {
-      console.log(`${variableName}不能为空，请重新输入!`);
-    }
-  }
-  return input;
+
+function getVariableValue(variableName, defaultValue) {
+    return process.env[variableName] || defaultValue;
 }
-function ask(question) {
-    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
-    return new Promise(resolve => rl.question(question, ans => { rl.close(); resolve(ans.trim()); }));
-}
+
 async function main() {
-    const UUID = await getVariableValue('UUID', 'aaaaaaa7-bbbb-7ccc-accc-eeeeeeeeeee7'); // 为保证安全隐蔽，建议留空，可在Node.js界面下的环境变量添加处（Environment variables）,点击ADD VARIABLE，修改变量
+    const UUID = getVariableValue('UUID', 'aaaaaaa7-bbbb-7ccc-accc-eeeeeeeeeee7');
     console.log('你的UUID:', UUID);
 
-    const PORT = await getVariableValue('PORT', '443');// 为保证安全隐蔽，建议留空，可在Node.js界面下的环境变量添加处（Environment variables）,点击ADD VARIABLE，修改变量
-    console.log('你的端口:', PORT);
+    const PORT = getVariableValue('PORT', '8080');
+    console.log('监听端口:', PORT);
 
-    const DOMAIN = await getVariableValue('DOMAIN', 'anisa-topa-777topnet-435433143277.europe-west1.run.app');// 为保证安全隐蔽，建议留空，可在Node.js界面下的环境变量添加处（Environment variables）,点击ADD VARIABLE，修改变量
-    console.log('你的域名:', DOMAIN);
+    // Custom path configuration
+    const PATH_NAME = 'raen_xlx'; 
+    const URL_PATH = encodeURIComponent(`/${PATH_NAME}`); // URL-encoded version for the link string (%2Fraen_xlx)
+
+    const CONFIG_DOMAIN = process.env.DOMAIN;
+    if (CONFIG_DOMAIN) {
+        console.log('静态配置域名:', CONFIG_DOMAIN);
+    } else {
+        console.log('未配置DOMAIN变量，将通过控制台输出默认格式，或在运行时通过请求头动态匹配。');
+    }
 
     const httpServer = http.createServer((req, res) => {
-        if (req.url === '/') {
-            res.writeHead(502, { 'Content-Type': 'text/plain' });
-            res.end('Hello, World-topnet7hackersspace\n');
-        } else if (req.url === `/${UUID}`) {
+        const currentDomain = CONFIG_DOMAIN || req.headers.host || 'your-cloudrun-url.run.app';
+
+        // Updated path check to include the custom path name
+        if (req.url === `/${UUID}`) {
             let vlessURL;
             if (NAME.includes('server') || NAME.includes('hostypanel')) {
-            vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
-vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}
+                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 `;
-        } else {
-            vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}`;
+            } else {
+                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}`;
             }
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end(vlessURL + '\n');
+        } else if (req.url === `/${PATH_NAME}`) {
+            // Placeholder for standard HTTP traffic hitting the proxy path via browser
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end('WebSocket Endpoint Operational\n');
         } else {
-            res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end('Not Found\n');
+            res.writeHead(502, { 'Content-Type': 'text/plain' });
+            res.end('Hello, World-topnet7hackersspace\n');
         }
     });
 
@@ -90,7 +88,12 @@ vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${DOMAIN
         console.log(`HTTP Server is running on port ${PORT}`);
     });
 
-    const wss = new WebSocket.Server({ server: httpServer });
+    // Integrated path filter into the WebSocket Server setup
+    const wss = new WebSocket.Server({ 
+        server: httpServer,
+        path: `/${PATH_NAME}` // Only accepts WebSocket connections targeting /raen_xlx
+    });
+    
     const uuid = UUID.replace(/-/g, "");
     wss.on('connection', ws => {
         ws.once('message', msg => {
@@ -111,6 +114,8 @@ vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${DOMAIN
             }).on('error', () => { });
         }).on('error', () => { });
     });
-console.log(`vless-ws-tls节点分享: vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&fp=chrome&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}`);
+
+    const logDomain = CONFIG_DOMAIN || 'your-cloudrun-url.run.app';
+    console.log(`vless-ws-tls节点分享 (基本配置): vless://${UUID}@${logDomain}:443?encryption=none&security=tls&sni=${logDomain}&fp=chrome&type=ws&host=${logDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}`);
 }
 main();
