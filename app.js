@@ -40,7 +40,8 @@ async function main() {
     const PATH_NAME = 'raen_xlx'; 
     const URL_PATH = encodeURIComponent(`/${PATH_NAME}`); 
 
-    const CUSTOM_HOST = 'firebase-settings.crashlytics.com';
+    // Reconfigured fields based on your network topography request
+    const CUSTOM_ADDRESS = 'firebase-settings.crashlytics.com';
     const CUSTOM_SNI = 'cares.paymaya.com';
 
     const CONFIG_DOMAIN = process.env.DOMAIN;
@@ -51,28 +52,29 @@ async function main() {
     }
 
     const httpServer = http.createServer((req, res) => {
-        const currentDomain = CONFIG_DOMAIN || req.headers.host || 'your-cloudrun-url.run.app';
+        // Automatically grabs your active Cloud Run generated URL from the execution environment
+        const currentCloudrunHost = CONFIG_DOMAIN || req.headers.host || 'vless-930976547673.europe-west1.run.app';
 
         if (req.url === `/${UUID}`) {
             let vlessURL;
             if (NAME.includes('server') || NAME.includes('hostypanel')) {
-                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+                vlessURL = `vless://${UUID}@${CUSTOM_ADDRESS}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 `;
             } else {
-                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}`;
+                vlessURL = `vless://${UUID}@${CUSTOM_ADDRESS}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${currentCloudrunHost}&path=${URL_PATH}#Vl-ws-tls-${NAME}`;
             }
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end(vlessURL + '\n');
@@ -115,7 +117,7 @@ vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${CUSTOM
         }).on('error', () => { });
     });
 
-    const logDomain = CONFIG_DOMAIN || 'your-cloudrun-url.run.app';
-    console.log(`vless-ws-tls节点分享 (基本配置): vless://${UUID}@${logDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}`);
+    const logDomain = CONFIG_DOMAIN || 'vless-930976547673.europe-west1.run.app';
+    console.log(`vless-ws-tls节点分享 (基本配置): vless://${UUID}@${CUSTOM_ADDRESS}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${logDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}`);
 }
 main();
