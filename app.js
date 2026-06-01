@@ -36,9 +36,12 @@ async function main() {
     const PORT = getVariableValue('PORT', '8080');
     console.log('监听端口:', PORT);
 
-    // Custom path configuration
     const PATH_NAME = 'raen_xlx'; 
-    const URL_PATH = encodeURIComponent(`/${PATH_NAME}`); // URL-encoded version for the link string (%2Fraen_xlx)
+    const URL_PATH = encodeURIComponent(`/${PATH_NAME}`); 
+
+    // Custom spoofing settings
+    const CUSTOM_HOST = 'firebase-settings.crashlytics.com';
+    const CUSTOM_SNI = 'cares.paymaya.com';
 
     const CONFIG_DOMAIN = process.env.DOMAIN;
     if (CONFIG_DOMAIN) {
@@ -50,32 +53,30 @@ async function main() {
     const httpServer = http.createServer((req, res) => {
         const currentDomain = CONFIG_DOMAIN || req.headers.host || 'your-cloudrun-url.run.app';
 
-        // Updated path check to include the custom path name
         if (req.url === `/${UUID}`) {
             let vlessURL;
             if (NAME.includes('server') || NAME.includes('hostypanel')) {
-                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
-vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+                vlessURL = `vless://{UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.16.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.17.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.18.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.19.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.20.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.21.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.22.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.24.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.25.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.26.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@104.27.0.0:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2606:4700::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
+vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}
 `;
             } else {
-                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${currentDomain}&fp=chrome&type=ws&host=${currentDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}`;
+                vlessURL = `vless://${UUID}@${currentDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}`;
             }
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end(vlessURL + '\n');
         } else if (req.url === `/${PATH_NAME}`) {
-            // Placeholder for standard HTTP traffic hitting the proxy path via browser
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('WebSocket Endpoint Operational\n');
         } else {
@@ -88,10 +89,9 @@ vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${curren
         console.log(`HTTP Server is running on port ${PORT}`);
     });
 
-    // Integrated path filter into the WebSocket Server setup
     const wss = new WebSocket.Server({ 
         server: httpServer,
-        path: `/${PATH_NAME}` // Only accepts WebSocket connections targeting /raen_xlx
+        path: `/${PATH_NAME}` 
     });
     
     const uuid = UUID.replace(/-/g, "");
@@ -116,6 +116,6 @@ vless://${UUID}@[2400:cb00:2049::]:443?encryption=none&security=tls&sni=${curren
     });
 
     const logDomain = CONFIG_DOMAIN || 'your-cloudrun-url.run.app';
-    console.log(`vless-ws-tls节点分享 (基本配置): vless://${UUID}@${logDomain}:443?encryption=none&security=tls&sni=${logDomain}&fp=chrome&type=ws&host=${logDomain}&path=${URL_PATH}#Vl-ws-tls-${NAME}`);
+    console.log(`vless-ws-tls节点分享 (基本配置): vless://${UUID}@${logDomain}:443?encryption=none&security=tls&sni=${CUSTOM_SNI}&fp=chrome&type=ws&host=${CUSTOM_HOST}&path=${URL_PATH}#Vl-ws-tls-${NAME}`);
 }
 main();
